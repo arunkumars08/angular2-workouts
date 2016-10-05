@@ -1,5 +1,7 @@
 import { Component, OnInit, Injectable } from "@angular/core";
 
+import 'rsjs/add/operator/toPromise';
+
 class Book {
     constructor ( public title : string,  public author : string ) { }
 }
@@ -7,22 +9,45 @@ class Book {
 @Injectable()
 class TimeoutBookService {
     // simulation of getting data from server
-    getBookAsync( callback ) : void  {        
-        setTimeout ( () => {   callback ( new Book("T1", "A1") );   }, 4000 );
+    getBookAsync(  ) : Promise<Book>  {        
+      
+        return new Promise<Book>( (resolve) =>
+        {
+            setTimeout ( () => {   resolve ( new Book("T1", "A1") );   }, 4000 );
+        }) ;
     }
 }
 
 @Injectable()
 class XHRBookService {
-    getBookAsync( callback ) : void  {
-       var xhr = new XMLHttpRequest();
-       xhr.open ( "get", "/book", true);
-       xhr.onload = function() {
-            if ( xhr.status === 200) {
-                callback (  JSON.parse(xhr.responseText) );
-            }
-       };
-       xhr.send();
+    getBookAsync(  ) : Promise<Book>  {
+
+        return new Promise ( (resolve, reject) =>
+        {
+            var xhr = new XMLHttpRequest();
+            xhr.open ( "get", "/book", true);
+            xhr.onload = function() {
+                    if ( xhr.status === 200) {
+                        resolve (  JSON.parse(xhr.responseText) );
+                    } else {
+                        reject ( xhr.responseText) ;
+                    }
+            };
+            xhr.send();
+        } ) ;
+    }
+}
+
+import {HttpModule, Headers, Http} from '@angular/http';
+
+@Injectable()
+class HTTPBookService {
+    constructor(public http : Http) {
+
+    }
+    getBookAsync(  ) : Promise<Book>  {
+            return this .http   .get('/books')
+                                .toPromise();
     }
 }
 
@@ -39,7 +64,9 @@ class BookComponent implements OnInit {
     private book : Book  = new Book("", "") ; 
 
     ngOnInit() {
-       this.tms.getBookAsync ( (bk) => { this.book = bk ; } ) ;
+       this.tms.getBookAsync ( )
+                .then ( (bk) => {this.book = bk ; })
+                .catch( () => { } ) ;
     }
 
 }
@@ -59,7 +86,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 @NgModule(
     {
-        imports : [BrowserModule ],
+        imports : [BrowserModule, HttpModule ],
         declarations : [MainComponent, BookComponent ],
         providers : [ TimeoutBookService ],
         bootstrap : [MainComponent]

@@ -16,21 +16,23 @@ var Book = (function () {
     }
     return Book;
 }());
-var BookComponent = (function () {
-    function BookComponent() {
-        this.book = new Book("", "");
+var TimeoutBookService = (function () {
+    function TimeoutBookService() {
     }
-    BookComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        //    this.book = this.getBook() ;
-        this.getBookAsync_Timeout(function (bk) { _this.book = bk; });
-    };
     // simulation of getting data from server
-    BookComponent.prototype.getBookAsync_Timeout = function (callback) {
+    TimeoutBookService.prototype.getBookAsync = function (callback) {
         setTimeout(function () { callback(new Book("T1", "A1")); }, 4000);
-        // return new Book("T1", "A1") ;
     };
-    BookComponent.prototype.getBookAsync_XHR = function (callback) {
+    TimeoutBookService = __decorate([
+        core_1.Injectable(), 
+        __metadata('design:paramtypes', [])
+    ], TimeoutBookService);
+    return TimeoutBookService;
+}());
+var XHRBookService = (function () {
+    function XHRBookService() {
+    }
+    XHRBookService.prototype.getBookAsync = function (callback) {
         var xhr = new XMLHttpRequest();
         xhr.open("get", "/book", true);
         xhr.onload = function () {
@@ -39,14 +41,28 @@ var BookComponent = (function () {
             }
         };
         xhr.send();
-        // return new Book("T1", "A1") ;
+    };
+    XHRBookService = __decorate([
+        core_1.Injectable(), 
+        __metadata('design:paramtypes', [])
+    ], XHRBookService);
+    return XHRBookService;
+}());
+var BookComponent = (function () {
+    function BookComponent(tms) {
+        this.tms = tms;
+        this.book = new Book("", "");
+    }
+    BookComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.tms.getBookAsync(function (bk) { _this.book = bk; });
     };
     BookComponent = __decorate([
         core_1.Component({
             selector: "book",
             template: "{{book.title}} - {{book.author}}"
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [TimeoutBookService])
     ], BookComponent);
     return BookComponent;
 }());
@@ -73,6 +89,7 @@ var Example1Module = (function () {
         core_2.NgModule({
             imports: [platform_browser_1.BrowserModule],
             declarations: [MainComponent, BookComponent],
+            providers: [TimeoutBookService],
             bootstrap: [MainComponent]
         }), 
         __metadata('design:paramtypes', [])
@@ -84,4 +101,4 @@ var Example1Module = (function () {
 var platform_browser_dynamic_1 = require('@angular/platform-browser-dynamic');
 var platform = platform_browser_dynamic_1.platformBrowserDynamic();
 platform.bootstrapModule(Example1Module);
-//# sourceMappingURL=example8.js.map
+//# sourceMappingURL=example9.js.map
