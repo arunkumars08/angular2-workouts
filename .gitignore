@@ -1,0 +1,5 @@
+angapps/app1/node_modules/*
+angapps/app2/node_modules/*
+
+angapps/app1/.vscode/*
+angapps/app2/.vscode/*

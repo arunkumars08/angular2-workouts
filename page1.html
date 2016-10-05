@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Training</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            i = 10; // window.i = 10 ;
+            var j = 20; // window.j =20 ;
+
+            // window.f1 = function() { } ;
+
+            f1();
+
+            // window.f1 = function(x) { } ;
+            var f1 = function () {
+                console.log("f1");
+            };
+            f1(10);
+
+
+            function f1(x) {
+                console.log("f1: " + x);
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+
+</body>
+</html>
+
+<script>
+    // window.sum
+    function sum(/* this = ref. of window object */ x, y) { // function
+        return x + y;
+    }
+    sum(10, 20); // window.sum ( 10, 20 );
+    // sum ( ref. of window object, 10, 20 ) ;
+
+    // window.Point
+    function Point(/* this */ x, y) { // class
+        this.xval = x;
+        this.yval = y; 
+    }
+    var p1 = new Point(10, 10); // Point ( ref. of Point object, 10, 10);
+    var p2 = new Point(20, 20); // Point ( ref. of Point object, 20, 20 );
+</script>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Training</title>
+        <style type="text/css">
+            #calendar {
+                width: 350px;
+                background: GREEN;
+                text-align: center;
+                color: #fff;
+            }
+            #calendar:after {
+                content: '';
+                display: block;
+                float: none;
+                clear: both;
+            }
+            span {
+                display: inline-block;
+                float: left;
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="calendar"></div>
+        <script type="text/javascript">
+            var Calendar = (function () {
+                var daysInText = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+                var arr_days = new Array(42);
+                var fn = {
+                    _init: function () {
+                        fn._generateCalendar(11, 2016);
+                    },
+                    _generateCalendar: function (month, year) {
+                        var start = new Date(year, month + 1, 0);
+                        var firstDay = start.getDay();
+                        var total = start.getDate();
+                        console.log(firstDay, total);
+                        for(var i = firstDay, day = 1; day <= total; ++ i, ++ day) {
+                            arr_days[i] = day;
+                        }
+                        console.log(arr_days);
+                        fn._drawCalendar();
+                    },
+                    _drawCalendar: function () {
+                        var calendar = document.getElementById('calendar');
+                        var totalDaysInText = daysInText.length;
+                        for(var i = 0; i < totalDaysInText; ++ i) {
+                             (function (i) {
+                                var span = document.createElement('span');
+                                span.innerHTML = daysInText[i] ? daysInText[i] : '';
+                                calendar.appendChild(span);
+                           })(i);
+                        }
+                        for(var i = 0; i <= 36; ++ i) {
+                            (function (i) {
+                                var span = document.createElement('span');
+                                span.innerHTML = arr_days[i] ? arr_days[i] : '';
+                                calendar.appendChild(span);
+                           })(i);
+                        }
+                        
+                    }
+                };
+                var api = {
+                    init: function () {
+                        return fn._init.apply(this, arguments);
+                    }
+                };
+                return api;
+            })().init();
+        </script>
+    </body>
+</html>
